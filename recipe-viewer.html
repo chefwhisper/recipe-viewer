@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Viewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← Back to Recipes</a>
+        
+        <!-- Recipe Introduction -->
+        <div class="recipe-container" id="recipe-intro">
+            <h1 class="recipe-title" id="recipe-title">Recipe Title</h1>
+            
+            <div class="intro-layout">
+                <div class="intro-image-container">
+                    <img class="recipe-image" id="recipe-image" src="/images/placeholder.jpg" alt="Recipe">
+                </div>
+                
+                <div class="recipe-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Yields:</span>
+                        <span class="meta-value" id="recipe-yields">4 servings</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Total Time:</span>
+                        <span class="meta-value" id="recipe-total-time">35 minutes</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Prep Time:</span>
+                        <span class="meta-value" id="recipe-prep-time">15 minutes</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Active Cooking:</span>
+                        <span class="meta-value" id="recipe-active-time">15 minutes</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Hands-off Time:</span>
+                        <span class="meta-value" id="recipe-hands-off-time">5 minutes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ingredients Section -->
+            <div class="ingredients-section">
+                <h2>Ingredients</h2>
+                <ul id="ingredients-list" class="ingredients-list">
+                    <!-- Ingredients will be loaded dynamically -->
+                </ul>
+            </div>
+            
+            <button id="start-recipe" class="primary-button">Start Cooking</button>
+            <button id="shopping-list" class="secondary-button">View Shopping List</button>
+        </div>
+        
+        <!-- Step-by-Step Instructions -->
+        <div class="recipe-container step-container" id="recipe-steps">
+            <div class="progress-bar">
+                <div class="progress" id="step-progress"></div>
+            </div>
+            
+            <div class="phase-indicators">
+                <span class="phase-indicator active" id="prep-phase">Preparation</span>
+                <span class="phase-indicator" id="cooking-phase">Cooking</span>
+            </div>
+            
+            <h2 class="step-number" id="step-number">Step 1</h2>
+            
+            <div class="step-content">
+                <p class="main-step" id="main-step">Main step instruction goes here.</p>
+                
+                <ul class="bullet-list" id="bullet-list">
+                    <!-- Bullet points will be added dynamically -->
+                </ul>
+                
+                <div class="timer-container" id="timer-container" style="display: none;">
+                    <button class="timer-button" id="start-timer">Start Timer</button>
+                    <button class="timer-button" id="pause-timer" style="display: none;">Pause</button>
+                    <button class="timer-button" id="reset-timer" style="display: none;">Reset</button>
+                    <span class="timer-display" id="timer-display">00:00</span>
+                </div>
+            </div>
+            
+            <div class="step-nav-buttons">
+                <button id="prev-step">Previous</button>
+                <button id="read-step">Read Step</button>
+                <button id="next-step">Next</button>
+                <button id="finish-recipe" style="display: none;">Finish</button>
+            </div>
+            
+            <div class="voice-controls">
+                <button id="voice-command-button">Enable Voice Commands</button>
+                <div class="status">Voice commands: "next", "previous", "repeat", "start", "stop"</div>
+                <div id="voice-status" class="status">Voice recognition not active</div>
+            </div>
+        </div>
+        
+        <!-- Shopping List Modal -->
+        <div id="shopping-list-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Shopping List</h2>
+                <div id="grocery-list-container">
+                    <!-- Categories and items will be added dynamically -->
+                </div>
+                <button id="print-list" class="primary-button">Print List</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="viewer-script.js"></script>
+</body>
+</html>

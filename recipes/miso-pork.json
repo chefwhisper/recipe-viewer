@@ -1,0 +1,140 @@
+{
+    "id": "miso-pork",
+    "title": "Miso-Caramel Pork Chops with Apples",
+    "metadata": {
+      "imageUrl": "/images/pork-chops.jpg",
+      "yields": "4 servings",
+      "totalTime": "30 minutes",
+      "prepTime": "10 minutes",
+      "activeTime": "20 minutes",
+      "handsOffTime": "0 minutes"
+    },
+    "preparationSteps": [
+      {
+        "id": "prep-step-1",
+        "title": "Prep Step 1",
+        "mainStep": "Gather all ingredients and equipment (large skillet, measuring spoons, small mixing bowl, tongs, meat thermometer, cutting board, knife).",
+        "bullets": []
+      },
+      {
+        "id": "prep-step-2",
+        "title": "Prep Step 2",
+        "mainStep": "Prepare the pork chops",
+        "bullets": [
+          "Pat 4 pork chops very dry with paper towels.",
+          "Season pork chops all over with salt and 2 teaspoons black pepper.",
+          "Measure 2 Tablespoons of canola oil (or other neutral oil)"
+        ]
+      },
+      {
+        "id": "prep-step-3",
+        "title": "Prep Step 3",
+        "mainStep": "Prepare the miso brown sugar mixture, in a small bowl, combine",
+        "bullets": [
+          "4 Tablespoons light brown sugar",
+          "2 Tablespoons white miso",
+          "2 Tablespoons apple cider vinegar",
+          "4 Tablespoons of water",
+          "Stir with a fork until smooth."
+        ]
+      },
+      {
+        "id": "prep-step-4",
+        "title": "Prep Step 4",
+        "mainStep": "Prepare the apples",
+        "bullets": [
+          "Core 2 apples, then slice into ¼-inch thick slices."
+        ]
+      }
+    ],
+    "cookingSteps": [
+      {
+        "id": "cooking-step-1",
+        "title": "Cooking Step 1",
+        "mainStep": "Heat large skillet over medium heat",
+        "bullets": [
+          "Add and heat 2 Tablespoons oil (2 minutes)",
+          "Add the seasoned pork chops. Cook, flipping every 2 minutes, until browned and internal temperature reaches 135°F in the thickest part (10-15 minutes)",
+          "Transfer pork chops to a plate to rest",
+          "Turn off the heat and pour off all but 2 Tablespoons of fat from the skillet, enough to have a thin layer of fat"
+        ]
+      },
+      {
+        "id": "cooking-step-2",
+        "title": "Cooking Step 2",
+        "mainStep": "Turn the heat for the large skillet to medium heat",
+        "bullets": [
+          "Add apple slices to the skillet in a single layer. Cook without touching until browned underneath (2-4 minutes).",
+          "Pour the miso brown sugar mixture into the skillet and cook, scraping up browned bits and stirring, until the sauce thickens enough to coat the back of a spoon (2 minutes)."
+        ]
+      },
+      {
+        "id": "cooking-step-3",
+        "title": "Cooking Step 3",
+        "mainStep": "Turn off the heat",
+        "bullets": [
+          "Add the pork chops and their juices back to the skillet and turn to coat in the caramel.",
+          "Serve pork chops with a spoonful of the apples and caramel alongside mashed potatoes"
+        ]
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "Bone-in pork chops (1 to 1½-inch-thick)",
+        "quantity": "4",
+        "category": "Meat"
+      },
+      {
+        "name": "Salt",
+        "quantity": "to taste",
+        "category": "Pantry"
+      },
+      {
+        "name": "Black pepper",
+        "quantity": "2 teaspoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "Neutral oil (grapeseed or canola)",
+        "quantity": "2 Tablespoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "Light brown sugar",
+        "quantity": "4 Tablespoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "Apple cider vinegar",
+        "quantity": "2 Tablespoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "White miso",
+        "quantity": "2 Tablespoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "Water",
+        "quantity": "4 Tablespoons",
+        "category": "Pantry"
+      },
+      {
+        "name": "Granny Smith or other tart-crisp apples",
+        "quantity": "2",
+        "category": "Produce"
+      }
+    ],
+    "groceryList": {
+      "Meat": ["4 (1- to 1½-inch-thick) bone-in pork chops"],
+      "Produce": ["2 Granny Smith or other tart-crisp apples"],
+      "Pantry": [
+        "Salt",
+        "Black pepper",
+        "Neutral oil (grapeseed or canola)",
+        "Light brown sugar",
+        "Apple cider vinegar",
+        "White miso"
+      ]
+    }
+  }

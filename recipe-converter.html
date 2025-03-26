@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Recipe Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            margin-bottom: 15px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .ingredients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .ingredients-table th, .ingredients-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .ingredients-table th {
+            background-color: #f2f2f2;
+        }
+        .ingredient-controls {
+            margin-top: 10px;
+        }
+        .category-section {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .category-items {
+            margin-left: 20px;
+        }
+        input.short {
+            width: 150px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab-button {
+            background-color: #ddd;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            flex-grow: 1;
+            transition: background-color 0.3s;
+        }
+        .tab-button:hover {
+            background-color: #ccc;
+        }
+        .tab-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Recipe Converter</h1>
+    
+    <div class="container">
+        <h2>Recipe Metadata</h2>
+        
+        <div class="field">
+            <label for="recipe-title">Recipe Title:</label>
+            <input type="text" id="recipe-title" placeholder="e.g., Miso-Caramel Pork Chops with Apples">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-id">Recipe ID (no spaces, lowercase):</label>
+            <input type="text" id="recipe-id" placeholder="e.g., miso-pork">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-yields">Yields:</label>
+            <input type="text" id="recipe-yields" placeholder="e.g., 4 servings">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-total-time">Total Time:</label>
+            <input type="text" id="recipe-total-time" placeholder="e.g., 35 minutes">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-prep-time">Prep Time:</label>
+            <input type="text" id="recipe-prep-time" placeholder="e.g., 15 minutes">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-active-time">Active Cooking Time:</label>
+            <input type="text" id="recipe-active-time" placeholder="e.g., 15 minutes">
+        </div>
+        
+        <div class="field">
+            <label for="recipe-hands-off-time">Hands-off Cooking Time:</label>
+            <input type="text" id="recipe-hands-off-time" placeholder="e.g., 5 minutes">
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Preparation Steps</h2>
+        <p>Format: One step per line. Use numbered format like "1)", "2)", "1." or "Step 1:" for each step. Bullet points can be added with "•" or "-" at the beginning of a line.</p>
+        <textarea id="prep-content" placeholder="1) Gather all ingredients...&#10;• Item 1&#10;• Item 2&#10;2) In a bowl, mix soy sauce..."></textarea>
+    </div>
+    
+    <div class="container">
+        <h2>Cooking Steps</h2>
+        <p>Format: One step per line. Use numbered format like "1)", "2)", "1." or "Step 1:" for each step. Bullet points can be added with "•" or "-" at the beginning of a line.</p>
+        <textarea id="cooking-content" placeholder="1) Heat a large skillet...&#10;• Heat for 2 minutes&#10;• Watch carefully&#10;2) Add the chicken and cook..."></textarea>
+    </div>
+    
+    <div class="container">
+        <h2>Ingredients</h2>
+        <p>You can add ingredients in two ways:</p>
+        
+        <div class="tabs">
+            <button class="tab-button active" id="list-tab">Paste Ingredient List</button>
+            <button class="tab-button" id="individual-tab">Add Individual Ingredients</button>
+        </div>
+        
+        <div id="list-input" class="tab-content">
+            <p>Paste your ingredient list here (one per line, with optional bullets):</p>
+            <textarea id="ingredients-list" placeholder="Olive oil (¼ cup and 2 Tablespoons)&#10;* 3 tablespoons soy sauce&#10;* 1½ pounds sirloin or flank steak&#10;* 1 large head broccoli (about 1 pound)"></textarea>
+            <div class="field">
+                <label for="default-category">Default Category:</label>
+                <input type="text" id="default-category" value="Pantry" placeholder="Default category for ingredients">
+            </div>
+            <button id="parse-ingredients">Parse Ingredients</button>
+        </div>
+        
+        <div id="individual-input" class="tab-content" style="display: none;">
+            <div class="ingredient-controls">
+                <input type="text" id="new-ingredient-name" placeholder="Ingredient name" class="short">
+                <input type="text" id="new-ingredient-quantity" placeholder="Quantity" class="short">
+                <input type="text" id="new-ingredient-category" placeholder="Category (Meat, Produce, Pantry, etc.)" class="short">
+                <button id="add-ingredient">Add Ingredient</button>
+            </div>
+        </div>
+        
+        <h3>Current Ingredients:</h3>
+        <table class="ingredients-table">
+            <thead>
+                <tr>
+                    <th>Ingredient Name</th>
+                    <th>Quantity</th>
+                    <th>Category</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="ingredients-tbody">
+                <!-- Ingredients will be added dynamically -->
+            </tbody>
+        </table>
+    </div>
+    
+    <button id="convert">Convert to JSON</button>
+    <button id="copy-output">Copy Output</button>
+    
+    <h3>Output:</h3>
+    <pre id="output"></pre>
+    
+    <script>
+        // Track ingredients
+        let ingredients = [];
+        
+        // Auto-generate ID from title
+        document.getElementById('recipe-title').addEventListener('input', function() {
+            const title = this.value;
+            const id = title.toLowerCase()
+                .replace(/[^\w\s-]/g, '') // Remove special characters
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+            
+            document.getElementById('recipe-id').value = id;
+        });
+        
+        // Tab switching functionality
+        document.getElementById('list-tab').addEventListener('click', function() {
+            document.getElementById('list-tab').classList.add('active');
+            document.getElementById('individual-tab').classList.remove('active');
+            document.getElementById('list-input').style.display = 'block';
+            document.getElementById('individual-input').style.display = 'none';
+        });
+        
+        document.getElementById('individual-tab').addEventListener('click', function() {
+            document.getElementById('individual-tab').classList.add('active');
+            document.getElementById('list-tab').classList.remove('active');
+            document.getElementById('individual-input').style.display = 'block';
+            document.getElementById('list-input').style.display = 'none';
+        });
+        
+        // Parse ingredients from list
+        document.getElementById('parse-ingredients').addEventListener('click', function() {
+            const ingredientsList = document.getElementById('ingredients-list').value;
+            const defaultCategory = document.getElementById('default-category').value.trim() || 'Pantry';
+            
+            if (!ingredientsList.trim()) {
+                alert('Please enter some ingredients');
+                return;
+            }
+            
+            // Split by lines and process each line
+            const lines = ingredientsList.split('\n').filter(line => line.trim());
+            
+            lines.forEach(line => {
+                // Remove bullet points if present
+                let cleanLine = line.trim();
+                if (cleanLine.startsWith('*') || cleanLine.startsWith('-') || cleanLine.startsWith('•')) {
+                    cleanLine = cleanLine.substring(1).trim();
+                }
+                
+                // Try to separate quantity and name
+                let quantity = '';
+                let name = cleanLine;
+                
+                // Look for common quantity patterns
+                const quantityPattern = /^([\d¼½¾⅓⅔⅛⅜⅝⅞]+\s*(-|to|and)?\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]*\s*(cup|cups|tbsp|tsp|tablespoon|tablespoons|teaspoon|teaspoons|pound|pounds|lb|lbs|ounce|ounces|oz|gram|grams|g|kilogram|kilograms|kg|ml|milliliter|milliliters|l|liter|liters|clove|cloves|bunch|bunches|pinch|pinches|dash|dashes)s?)/i;
+                
+                const match = cleanLine.match(quantityPattern);
+                if (match) {
+                    quantity = match[0].trim();
+                    name = cleanLine.substring(match[0].length).trim();
+                } else {
+                    // Try to find quantity in parentheses
+                    const parenthesesMatch = cleanLine.match(/\((.*?)\)/);
+                    if (parenthesesMatch) {
+                        // Extract the content before the parentheses as the name
+                        const parts = cleanLine.split('(');
+                        name = parts[0].trim();
+                        quantity = parenthesesMatch[1].trim();
+                    }
+                }
+                
+                // Guess the category based on the ingredient name
+                let category = defaultCategory;
+                
+                // Common categorization rules
+                const meatKeywords = ['beef', 'chicken', 'pork', 'steak', 'lamb', 'turkey', 'meat', 'sirloin', 'flank'];
+                const produceKeywords = ['vegetable', 'fruit', 'apple', 'onion', 'garlic', 'broccoli', 'carrot', 'potato', 'tomato', 'lemon', 'lime', 'parsley', 'herb', 'cilantro', 'basil'];
+                const dairyKeywords = ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'dairy'];
+                
+                const lowerName = name.toLowerCase();
+                
+                if (meatKeywords.some(keyword => lowerName.includes(keyword))) {
+                    category = 'Meat';
+                } else if (produceKeywords.some(keyword => lowerName.includes(keyword))) {
+                    category = 'Produce';
+                } else if (dairyKeywords.some(keyword => lowerName.includes(keyword))) {
+                    category = 'Dairy';
+                }
+                
+                // Add the ingredient if we have a name
+                if (name) {
+                    addIngredient(name, quantity || 'to taste', category);
+                }
+            });
+            
+            // Clear the textarea after parsing
+            document.getElementById('ingredients-list').value = '';
+        });
+        
+        // Individual ingredient handling
+        document.getElementById('add-ingredient').addEventListener('click', function() {
+            const name = document.getElementById('new-ingredient-name').value.trim();
+            const quantity = document.getElementById('new-ingredient-quantity').value.trim();
+            const category = document.getElementById('new-ingredient-category').value.trim();
+            
+            if (name && quantity && category) {
+                addIngredient(name, quantity, category);
+                
+                // Clear input fields
+                document.getElementById('new-ingredient-name').value = '';
+                document.getElementById('new-ingredient-quantity').value = '';
+                document.getElementById('new-ingredient-category').value = '';
+            } else {
+                alert('Please fill in all fields for the ingredient');
+            }
+        });
+        
+        function addIngredient(name, quantity, category) {
+            // Add to our ingredients array
+            const ingredient = {
+                name: name,
+                quantity: quantity,
+                category: category
+            };
+            
+            ingredients.push(ingredient);
+            
+            // Update the table
+            updateIngredientsTable();
+        }
+        
+        function updateIngredientsTable() {
+            const tbody = document.getElementById('ingredients-tbody');
+            tbody.innerHTML = '';
+            
+            ingredients.forEach((ingredient, index) => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = ingredient.name;
+                
+                const quantityCell = document.createElement('td');
+                quantityCell.textContent = ingredient.quantity;
+                
+                const categoryCell = document.createElement('td');
+                categoryCell.textContent = ingredient.category;
+                
+                const actionCell = document.createElement('td');
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Remove';
+                deleteButton.onclick = function() {
+                    ingredients.splice(index, 1);
+                    updateIngredientsTable();
+                };
+                
+                actionCell.appendChild(deleteButton);
+                
+                row.appendChild(nameCell);
+                row.appendChild(quantityCell);
+                row.appendChild(categoryCell);
+                row.appendChild(actionCell);
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Copy output functionality
+        document.getElementById('copy-output').addEventListener('click', function() {
+            const output = document.getElementById('output');
+            const range = document.createRange();
+            range.selectNode(output);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Output copied to clipboard!');
+        });
+        
+        // Parse steps and generate JSON
+        document.getElementById('convert').addEventListener('click', function() {
+            // Get recipe metadata
+            const title = document.getElementById('recipe-title').value;
+            const id = document.getElementById('recipe-id').value;
+            const yields = document.getElementById('recipe-yields').value;
+            const totalTime = document.getElementById('recipe-total-time').value;
+            const prepTime = document.getElementById('recipe-prep-time').value;
+            const activeTime = document.getElementById('recipe-active-time').value;
+            const handsOffTime = document.getElementById('recipe-hands-off-time').value;
+            
+            // Parse preparation steps
+            const prepContent = document.getElementById('prep-content').value;
+            const prepSteps = parseSteps(prepContent, 'Prep Step');
+            
+            // Parse cooking steps
+            const cookingContent = document.getElementById('cooking-content').value;
+            const cookingSteps = parseSteps(cookingContent, 'Cooking Step');
+            
+            // Create grocery list from ingredients
+            const groceryList = createGroceryList(ingredients);
+            
+            // Create recipe object
+            const recipe = {
+                id: id || generateId(title),
+                title: title,
+                metadata: {
+                    imageUrl: '/api/placeholder/800/400',
+                    yields: yields,
+                    totalTime: totalTime,
+                    prepTime: prepTime,
+                    activeTime: activeTime,
+                    handsOffTime: handsOffTime
+                },
+                preparationSteps: prepSteps,
+                cookingSteps: cookingSteps,
+                ingredients: ingredients,
+                groceryList: groceryList
+            };
+            
+            // Output JSON
+            document.getElementById('output').textContent = JSON.stringify(recipe, null, 2);
+        });
+        
+        // Parse steps from text content
+        function parseSteps(content, stepPrefix) {
+            const steps = [];
+            const lines = content.split('\n').filter(line => line.trim().length > 0);
+            
+            let currentStep = null;
+            let currentMainStep = '';
+            let currentBullets = [];
+            
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                
+                // Check for various numbering formats: 1), 1., Step 1:, or Prep/Cooking Step 1:
+                if (trimmedLine.match(/^\d+[\)\.]/) || trimmedLine.match(/^Step \d+:/) || trimmedLine.startsWith(stepPrefix)) {
+                    // Save previous step if exists
+                    if (currentMainStep) {
+                        steps.push({
+                            id: `${stepPrefix.toLowerCase().replace(/\s+/g, '-')}-${steps.length + 1}`,
+                            title: `${stepPrefix} ${steps.length + 1}`,
+                            mainStep: currentMainStep,
+                            bullets: currentBullets
+                        });
+                    }
+                    
+                    // Start new step
+                    // Extract the content regardless of format
+                    let stepContent = "";
+                    
+                    // Check for formats with colon: "Step 1: Do something" or "Prep Step 1: Do something"
+                    const colonIndex = trimmedLine.indexOf(':');
+                    if (colonIndex !== -1) {
+                        stepContent = trimmedLine.substring(colonIndex + 1).trim();
+                    } 
+                    // Check for numbered formats: "1) Do something" or "1. Do something"
+                    else if (trimmedLine.match(/^\d+[\)\.]/)) {
+                        const match = trimmedLine.match(/^\d+[\)\.]\s*(.*)/);
+                        if (match && match[1]) {
+                            stepContent = match[1].trim();
+                        } else {
+                            stepContent = trimmedLine;
+                        }
+                    }
+                    // Fallback
+                    else {
+                        stepContent = trimmedLine;
+                    }
+                    
+                    currentMainStep = stepContent;
+                    currentBullets = [];
+                } else if (trimmedLine.startsWith('•') || trimmedLine.startsWith('-') || trimmedLine.startsWith('*')) {
+                    // Add bullet point
+                    currentBullets.push(trimmedLine.substring(1).trim());
+                } else if (currentMainStep) {
+                    // Add to current step if not a bullet
+                    currentMainStep += ' ' + trimmedLine;
+                }
+            });
+            
+            // Add the last step
+            if (currentMainStep) {
+                steps.push({
+                    id: `${stepPrefix.toLowerCase().replace(/\s+/g, '-')}-${steps.length + 1}`,
+                    title: `${stepPrefix} ${steps.length + 1}`,
+                    mainStep: currentMainStep,
+                    bullets: currentBullets
+                });
+            }
+            
+            return steps;
+        }
+        
+        // Create organized grocery list from ingredients
+        function createGroceryList(ingredients) {
+            // Group ingredients by category
+            const categorizedItems = {};
+            
+            ingredients.forEach(ingredient => {
+                const category = ingredient.category;
+                if (!categorizedItems[category]) {
+                    categorizedItems[category] = [];
+                }
+                
+                // Format the item for the grocery list
+                // Typically this would be the name with quantity
+                const item = `${ingredient.quantity} ${ingredient.name}`;
+                categorizedItems[category].push(item);
+            });
+            
+            return categorizedItems;
+        }

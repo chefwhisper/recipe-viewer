@@ -1,0 +1,21 @@
+{
+  "recipes": [
+    {
+      "id": "miso-pork",
+      "title": "Miso-Caramel Pork Chops with Apples",
+      "thumbnail": "/images/placeholder.jpg",
+      "time": "30 minutes",
+      "difficulty": "Easy"
+    },
+
+    {
+    "id": "recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli",
+    "title": "Recipe Fusion: Garlic Steak Bites with Miso Butter Broccoli",
+    "thumbnail": "/images/recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli.jpg",
+    "time": "35 minutes",
+    "difficulty": "Easy"
+    }
+
+
+  ]
+}
