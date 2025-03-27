@@ -11,6 +11,8 @@ let timerSeconds = 0;
 let timerRunning = false;
 let speechRecognition = null;
 let isVoiceActive = false;
+let isSpeaking = false;
+let preferredVoice = null;
 
 // DOM elements
 const recipeIntro = document.getElementById('recipe-intro');
@@ -42,6 +44,19 @@ const timerDisplay = document.getElementById('timer-display');
 
 // Load recipe when the page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the preferred voice when voices are loaded
+    window.speechSynthesis.onvoiceschanged = function() {
+        const voices = window.speechSynthesis.getVoices();
+        preferredVoice = voices.find(voice => voice.name === 'Google US English');
+        
+        // If not found, try to find any US English voice
+        if (!preferredVoice) {
+            preferredVoice = voices.find(voice => voice.lang === 'en-US');
+        }
+        
+        console.log("Default voice set to:", preferredVoice ? preferredVoice.name : "Browser default");
+    };
+    
     // Get recipe ID from URL query parameter
     const urlParams = new URLSearchParams(window.location.search);
     const recipeId = urlParams.get('id');
@@ -244,6 +259,9 @@ function goToNextStep() {
         currentStepIndex++;
     }
     
+    // Stop any ongoing speech when changing steps
+    stopSpeaking();
+    
     updateStepDisplay();
 }
 
@@ -262,6 +280,9 @@ function goToPrevStep() {
         currentStepIndex--;
     }
     
+    // Stop any ongoing speech when changing steps
+    stopSpeaking();
+    
     updateStepDisplay();
 }
 
@@ -279,6 +300,7 @@ function finishRecipe() {
     prepPhase.classList.add('active');
     
     stopTimer();
+    stopSpeaking();
     
     // Stop voice recognition if active
     if (isVoiceActive) {
@@ -356,6 +378,14 @@ function resetTimer() {
     updateTimerDisplay();
 }
 
+// Function to stop ongoing speech
+function stopSpeaking() {
+    if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+    }
+}
+
 // Speech functions with pauses
 function readCurrentStep() {
     // Check if the browser supports speech synthesis
@@ -366,7 +396,10 @@ function readCurrentStep() {
     
     try {
         // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
+        stopSpeaking();
+        
+        // Set flag that we're speaking
+        isSpeaking = true;
         
         const currentStep = currentSteps[currentStepIndex];
         
@@ -389,10 +422,27 @@ function readCurrentStep() {
             });
         }
         
+        // Initialize preferred voice if not already set
+        if (!preferredVoice) {
+            const voices = window.speechSynthesis.getVoices();
+            // Look for Google US English voice
+            preferredVoice = voices.find(voice => voice.name === 'Google US English');
+            
+            // If not found, try to find any US English voice
+            if (!preferredVoice) {
+                preferredVoice = voices.find(voice => voice.lang === 'en-US');
+            }
+            
+            // If still not found, use the default voice
+            if (!preferredVoice && voices.length > 0) {
+                preferredVoice = voices[0];
+            }
+        }
+        
         // Function to speak the next item in the queue
         let currentIndex = 0;
         function speakNext() {
-            if (currentIndex < speechQueue.length) {
+            if (currentIndex < speechQueue.length && isSpeaking) {
                 const item = speechQueue[currentIndex];
                 const utterance = new SpeechSynthesisUtterance(item.text);
                 
@@ -401,17 +451,28 @@ function readCurrentStep() {
                 utterance.pitch = 1;   // Normal pitch
                 utterance.volume = 1;  // Full volume
                 
+                // Set the preferred voice if available
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+                
                 // When this item finishes speaking
                 utterance.onend = function() {
-                    // Pause for the specified time, then speak the next item
-                    setTimeout(function() {
-                        currentIndex++;
-                        speakNext();
-                    }, item.pause);
+                    // Only continue if we haven't been stopped
+                    if (isSpeaking) {
+                        // Pause for the specified time, then speak the next item
+                        setTimeout(function() {
+                            currentIndex++;
+                            speakNext();
+                        }, item.pause);
+                    }
                 };
                 
                 // Speak this item
                 window.speechSynthesis.speak(utterance);
+            } else {
+                // We're done speaking
+                isSpeaking = false;
             }
         }
         
@@ -421,6 +482,7 @@ function readCurrentStep() {
     } catch (error) {
         console.error('Speech synthesis error:', error);
         alert('There was an error with the text-to-speech feature. Please try again.');
+        isSpeaking = false;
     }
 }
 
@@ -454,6 +516,12 @@ function setupVoiceRecognition() {
             pauseTimer();
         } else if (transcript.includes("finish") || transcript.includes("done")) {
             finishRecipe();
+        } 
+        // Add these new commands for stopping speech
+        else if (transcript.includes("stop") || transcript.includes("pause") || 
+                 transcript.includes("stop reading") || transcript.includes("be quiet")) {
+            stopSpeaking();
+            voiceStatus.textContent = "Voice reading stopped";
         }
     };
     
